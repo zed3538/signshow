@@ -1,0 +1,11 @@
+body {
+    margin: 0px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.site-nav {
+    background-color: rgb(94, 11, 21);
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
