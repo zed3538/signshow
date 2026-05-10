@@ -1,11 +1,66 @@
 body {
     margin: 0px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .site-nav {
     background-color: rgb(94, 11, 21);
     height: 80px;
     display: flex;
+    align-items: center;
+}
+
+.nav-primary {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    flex: 1;
+}
+
+.nav-primary li {
+    margin: 0;
+    padding: 0;
+}
+
+.nav-primary a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    white-space: nowrap;
+    display: inline-block;
+    padding: 4px 0;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 0 0 auto;
+}
+
+.nav-inner {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.nav-logo {
+    flex: 0 0 auto;
+    width: 145px;
+    line-height: 0.8;
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 2px;
     align-items: center;
 }
