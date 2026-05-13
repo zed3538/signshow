@@ -1,16 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignShow</title>
-</head>
-<body>
-    <p>fff</p>
-</body>
-</html>
+    <section class="hero">
+        <h1>SignShow</h1>
+        <div>
+            <button type="button">Get Started!</button>
+        </div>
+    </section class="info">
+        <div class="container">
+            <h1>Info</h1>
+            <div class="cards">
+                {% for page in pages %}
+                {{ Card(page) }}
+                {% endfor %}
+            </div>
+        </div>
+    
 
 {% endblock %}

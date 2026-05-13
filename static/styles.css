@@ -15,7 +15,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 25px;
+    gap: 50px;
     align-items: center;
     flex: 1;
 }
@@ -45,7 +45,7 @@ body {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
-    padding: 0 8px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     gap: 26px;
@@ -64,3 +64,17 @@ body {
     column-gap: 2px;
     align-items: center;
 }
+
+h1 {
+    text-align: center;
+    margin-top: 100px;
+    font-size: 60px;
+}
+
+section div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 10rem;
+}
+
