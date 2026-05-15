@@ -4,17 +4,16 @@
     <section class="hero">
         <h1>SignShow</h1>
         <div>
-            <button type="button">Get Started!</button>
+            <button type="button" class="button">Get Started!</button>
         </div>
     </section class="info">
-        <div class="container">
-            <h1>Info</h1>
-            <div class="cards">
-                {% for page in pages %}
-                {{ Card(page) }}
-                {% endfor %}
-            </div>
-        </div>
-    
+        <h2>Why SignShow?</h2>
+        <div class="cards">
+            {% for article in articles %}
+                {{Card(article) }}
+            {% endfor %}
+        </div>    
+        </section>
+
 
 {% endblock %}

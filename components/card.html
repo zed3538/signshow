@@ -1,9 +1,9 @@
-{% macro Card(page)%}
+{% macro Card(article) %}
 <div class="card">
-    <a href="{{page['link_href']}}">
+    <a href="{{article['link_href']}}">
         <img src="{{ url_for('static', filename=page['img_src']) }}" alt="{{page['img alt']}}">
-        <h5>{{page['title']}}</h5>
-        <p>{{page['summary']}}</p>
+        <h5>{{article['title']}}</h5>
+        <p>{{article['summary']}}</p>
         <label for="">{{article['link text']}}</label>
     </a>
 </div>
