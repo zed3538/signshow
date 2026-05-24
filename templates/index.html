@@ -4,19 +4,19 @@
 
     <section class="hero">
         <h1>SignShow</h1>
-        <div>
+        <div class="button">
             <button type="button" class="button">Get Started!</button>
         </div>
     <!-- info stuff -->
     </section class="info">
         <div class="container">
-                <h2>Why SignShow?</h2>
-                <div class="cards">
-                    {% for page in pages %}
-                        {{ Card(page) }}
-                    {% endfor %}
-        </div>    
+            <h2>Why SignShow?</h2>
+            <div class="cards">
+                {% for page in pages %}
+                    {{ Card(page) }}
+                {% endfor %}
+            </div>    
         </div>
-        </section>
+    </section>
 
 {% endblock %}

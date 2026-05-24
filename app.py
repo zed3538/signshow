@@ -18,6 +18,13 @@ def get_pages():
             'img_alt': 'smiley face',
             'title': 'ABC',
             'summary': 'abcdefg',
+        },
+                {
+            'link_href': 'abcdef',
+            'img_src': 'images/smiley.jpg',
+            'img_alt': 'smiley face',
+            'title': 'ABC',
+            'summary': 'abcdefg',
         }
     ]
     return pages
