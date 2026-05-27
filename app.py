@@ -1,26 +1,39 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash, session, redirect
+import sqlite3
 from livereload import server
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.config['secret_key'] = "SuperSecretKey"
+
+database = 'database.db'
+
+def query_db(sql,args=(),one=False):
+    db = sqlite3.connect(database)
+    cursor = db.cursor()
+    cursor.execute(sql, args)
+    results = cursor.fetchall()
+    db.commit()
+    db.close()
+    return (results[0] if results else None) if one else results
+
+## routes and stuff
 
 def get_pages():
     pages = [
         {
-            'link_href': 'abcdef',
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
             'summary': 'abcdefg',
         },
         {
-            'link_href': 'abcdef',
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
             'summary': 'abcdefg',
         },
-                {
-            'link_href': 'abcdef',
+        {
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
@@ -34,9 +47,29 @@ def index():
     pages = get_pages()
     return render_template("index.html", pages=pages)
 
-@app.route('/login')
+@app.route('/login', methods=["GET","POST"])
 def login():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        sql = "SELECT * FROM user WHERE username = ?"
+        user =  query_db(sql=sql,args=(username,),one=True)
+        if user:
+            if check_password_hash(user[2],password):
+                session['user'] = user
+                flash("Logged in successfully!")
+            else:
+                flash("Password incorrect.")
+        else:
+            flash("User does not exist.")
     return render_template("login.html")
+
+@app.route('/signup')
+def signup():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+    return render_template("signup.html")
 
 if __name__ == "__main__":
     app.run(debug=True);
