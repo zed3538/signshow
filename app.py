@@ -62,14 +62,23 @@ def login():
                 flash("Password incorrect.")
         else:
             flash("User does not exist.")
-    return render_template("login.html")
+    return render_template('login.html')
 
-@app.route('/signup')
+@app.route('/signup', methods=["GET","POST"])
 def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+        hashed_password = generate_password_hash(password)
+        sql = "INSERT INTO user (username,password) VALUES (?,?)"
+        query_db(sql,(username,hashed_password))
+        flash("Sign Up Successful!")
     return render_template("signup.html")
+
+@app.route('/logout')
+def logout():
+    session['user'] = None
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True);
