@@ -4,7 +4,7 @@ from livereload import server
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['secret_key'] = "SuperSecretKey"
+app.config['SECRET_KEY'] = "SuperSecretKey"
 
 database = 'database.db'
 
@@ -70,7 +70,7 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         hashed_password = generate_password_hash(password)
-        sql = "INSERT INTO user (username,password) VALUES (?,?)"
+        sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
         query_db(sql,(username,hashed_password))
         flash("Sign Up Successful!")
     return render_template("signup.html")
@@ -79,6 +79,11 @@ def signup():
 def logout():
     session['user'] = None
     return redirect('/')
+
+@app.route('/learn')
+def learn():
+    session['user'] = user
+    return render_template("learn.html")
 
 if __name__ == "__main__":
     app.run(debug=True);

@@ -3,7 +3,7 @@
 {% block content %}
 
     {% if session['user'] %}
-        <p>Welcome {{ session['user'][1] }}</p>
+        <p class="welcome-msg">Welcome {{ session['user'][1] }}</p>
     {% endif %}
 
     <section class="hero">
