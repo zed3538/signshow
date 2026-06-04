@@ -25,19 +25,19 @@ def get_pages():
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
-            'summary': 'abcdefg',
+            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
         },
         {
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
-            'summary': 'abcdefg',
+            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
         },
         {
             'img_src': 'images/smiley.jpg',
             'img_alt': 'smiley face',
             'title': 'ABC',
-            'summary': 'abcdefg',
+            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
         }
     ]
     return pages
@@ -53,11 +53,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
+        global user
         user =  query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
                 flash("Logged in successfully!")
+                redirect('/learn')
             else:
                 flash("Password incorrect.")
         else:
@@ -73,6 +75,7 @@ def signup():
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
         query_db(sql,(username,hashed_password))
         flash("Sign Up Successful!")
+        return redirect('/learn')
     return render_template("signup.html")
 
 @app.route('/logout')
@@ -82,7 +85,6 @@ def logout():
 
 @app.route('/learn')
 def learn():
-    session['user'] = user
     return render_template("learn.html")
 
 if __name__ == "__main__":

@@ -144,6 +144,8 @@ h1 {
 .card p {
     color: blueviolet;
     text-align: center;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
 
 h5 {
@@ -203,6 +205,17 @@ button[type=submit] {
     font-size: 30px;
 }
 
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    border: 1px solid red;
+    font-size: 30px;
+    border-radius: 10px;
+    background-color: blueviolet;
+}
+
 button[type=submit]:hover {
     background-color: green;
 }
@@ -216,5 +229,5 @@ button[type=submit]:hover {
 
 .welcome-msg {
     font-size: 60px;
-    border: 1px solid red;
+    border: 1px solid palegreen;
 }
