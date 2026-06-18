@@ -2,10 +2,6 @@
 {% from "card.html" import Card %}
 {% block content %}
 
-    {% if session['user'] %}
-        <p class="welcome-msg">Welcome {{ session['user'][1] }}</p>
-    {% endif %}
-
     <section class="hero">
         <h1>SignShow</h1>
         <div class="button">

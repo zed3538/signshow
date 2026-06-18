@@ -13,9 +13,11 @@ img {
 
 .site-nav {
     background-color: rgb(94, 11, 21);
-    height: 80px;
+    height: 120px;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 0;
 }
 
 .nav-primary {
@@ -36,7 +38,7 @@ img {
 .nav-primary a {
     color: white;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 30px;
     white-space: nowrap;
     display: inline-block;
     padding: 4px 0;
@@ -60,7 +62,7 @@ img {
 .nav-actions a {
     color: white;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 30px;
     white-space: nowrap;
     display: inline-block;
     padding: 4px 0;
@@ -83,7 +85,7 @@ img {
     text-decoration: none;
     color: white;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 30px;
     display: grid;
     grid-template-columns: auto auto;
     column-gap: 2px;
@@ -126,8 +128,8 @@ h1 {
     margin: 0 auto;
 }
 
-.button:hover {
-    background-color: aquamarine;
+.button a:hover {
+    background-color: rgb(130, 50, 61);
 }
 
 /* hero section styling */
@@ -179,7 +181,7 @@ h5 {
 
 form {
     border-radius: 50px;
-    background-color: grey;
+    background-color: rgb(140, 122, 107);
     padding: 100px;
     width: 50rem;
     margin-left: auto;
@@ -201,34 +203,6 @@ label[for=username], label[for=password] {
     display: inline-block;
     font-size: 30px;
 }
-
-button[type=submit] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
-    width: 100%;
-    margin-top: 30px;
-    border-radius: 10px;
-    font-size: 30px;
-}
-
-button[type=submit]:hover {
-    background-color: green;
-}
-
-.signup button[type=button] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
-    width: 100%;
-    margin-top: 30px;
-    border-radius: 10px;
-    background-color: darkgray;
-    font-size: 30px;
-}
-
 
 /* info styling end*/
 

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<p>abcd</p>
+    <p>abcd</p>
+
+    {% if session['user'] %}
+        <p class="welcome-msg">Welcome {{ session['user'][1] }}</p>
+    {% endif %}
 
 {% endblock %}

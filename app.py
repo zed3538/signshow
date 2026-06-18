@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
 from livereload import server
 from werkzeug.security import generate_password_hash, check_password_hash
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
@@ -86,6 +87,12 @@ def logout():
 @app.route('/learn')
 def learn():
     return render_template("learn.html")
+
+@app.route("/term/<int:id>")
+def term(id):
+    sql = "SELECT * FROM terms WHERE id=?"
+    term = query_db(sql,args=(id,),one=True)
+    return render_template ('terms.html', term=term)
 
 if __name__ == "__main__":
     app.run(debug=True);
