@@ -6,8 +6,9 @@
             <label for="username">Username</label>
             <input type="text" name="username">
             <label for="password">Password</label>
-            <p>Please ensure your password contains yada yada</p>
-            <input type="password" name="password">
+            <p>Please ensure your password contains at least 6 characters.</p>
+            <input type="password" name="password"
+                minlength="6" required>
             <div class="submit">
             <a href="/learn">Register</a>
             </div>

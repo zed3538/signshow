@@ -4,6 +4,9 @@ from livereload import server
 from werkzeug.security import generate_password_hash, check_password_hash
 from bs4 import BeautifulSoup
 
+
+soup = BeautifulSoup("<https://www.nzsl.nz/signs/search?tag=People+and+relationships>data<https://www.nzsl.nz/signs/search?tag=People+and+relationships>")
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
 
