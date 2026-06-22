@@ -41,11 +41,6 @@ img {
     padding-left: 3rem;
 }
 
-.nav-primary li {
-    margin: 0;
-    padding: 0;
-}
-
 .nav-primary a {
     color: white;
     text-decoration: none;
@@ -57,16 +52,10 @@ img {
 
 .nav-actions {
     list-style: none;
-    padding: 0;
     display: flex;
     gap: 50px;
     align-items: center;
     padding-right: 3rem;
-}
-
-.nav-actions li {
-    margin: 0;
-    padding: 0;
 }
 
 .nav-actions a {
@@ -161,16 +150,17 @@ h1 {
 }
 
 h5 {
+    font-size: 20px;
     text-align: center;
+
 }
 
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 50px;
+    margin: 0 auto;
+    padding: 2rem;
     width: 80rem;
     border-radius: 20px;
     background-color: rgb(140, 122, 107);
@@ -185,8 +175,7 @@ form {
     background-color: rgb(140, 122, 107);
     padding: 100px;
     width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 input[type=text], input[type=password] {
@@ -205,6 +194,17 @@ label[for=username], label[for=password] {
     font-size: 30px;
 }
 
+button[type=submit] {
+    color: blue;
+    font-size: 30px;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .submit a {
     color: rgb(217, 202, 179);
     text-decoration: none;
@@ -212,7 +212,7 @@ label[for=username], label[for=password] {
     border-radius: 10px;
     background-color: rgb(94, 11, 21);
     padding: 1.5rem;
-    margin: 0 auto;
+    margin: 2rem auto;
 }
 
 .submit a:hover {

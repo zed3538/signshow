@@ -2,10 +2,6 @@ from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
 from livereload import server
 from werkzeug.security import generate_password_hash, check_password_hash
-from bs4 import BeautifulSoup
-
-
-soup = BeautifulSoup("<https://www.nzsl.nz/signs/search?tag=People+and+relationships>data<https://www.nzsl.nz/signs/search?tag=People+and+relationships>")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
@@ -26,19 +22,19 @@ def query_db(sql,args=(),one=False):
 def get_pages():
     pages = [
         {
-            'img_src': 'images/smiley.jpg',
+            'img_src': 'images/icon_photovideo.png',
+            'img_alt': 'Use of photos and videos to help you visualise sign language gestures',
+            'title': 'Clear visuals',
+            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
+        },
+        {
+            'img_src': 'images/icon_photovideo.png',
             'img_alt': 'smiley face',
             'title': 'ABC',
             'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
         },
         {
-            'img_src': 'images/smiley.jpg',
-            'img_alt': 'smiley face',
-            'title': 'ABC',
-            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
-        },
-        {
-            'img_src': 'images/smiley.jpg',
+            'img_src': 'images/icon_photovideo.png',
             'img_alt': 'smiley face',
             'title': 'ABC',
             'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
