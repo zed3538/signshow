@@ -85,10 +85,10 @@ def logout():
 
 @app.route('/learn')
 def learn():
-    terms = query_db("SELECT term FROM terms")
+    terms = query_db("SELECT * FROM terms")
     return render_template("learn.html", terms=terms)
 
-@app.route("/learn/<int:id>")
+@app.route('/learn/<int:id>')
 def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
     terms = query_db(sql, one=True)
