@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    <p>abcd</p>
-
     {% if session['user'] %}
         <p class="welcome-msg">Welcome {{ session['user'][1] }}</p>
     {% endif %}
+
+    
+
+    <ul>
+        {% for term in terms %}
+            <li><a href="learn/{{term[id]}}">{{term}}</a></li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

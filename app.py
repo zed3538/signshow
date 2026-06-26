@@ -85,13 +85,14 @@ def logout():
 
 @app.route('/learn')
 def learn():
-    return render_template("learn.html")
+    terms = query_db("SELECT term FROM terms")
+    return render_template("learn.html", terms=terms)
 
-@app.route("/term/<int:id>")
-def term(id):
-    sql = "SELECT * FROM terms WHERE id=?"
-    term = query_db(sql,args=(id,),one=True)
-    return render_template ('terms.html', term=term)
+@app.route("/learn/<int:id>")
+def termLearn(id):
+    sql = f"SELECT * FROM terms WHERE id={id}"
+    terms = query_db(sql, one=True)
+    return render_template ("term.html", terms=terms)
 
 if __name__ == "__main__":
     app.run(debug=True);
