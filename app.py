@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
-from livereload import server
+from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -95,4 +95,9 @@ def termLearn(id):
     return render_template ("term.html", terms=terms)
 
 if __name__ == "__main__":
-    app.run(debug=True);
+    app.run(debug=True)
+    server = Server(app.wsgi_app)
+    server.watch("templates/")
+    server.watch("static/")
+    server.watch("static/")
+    server.serve()

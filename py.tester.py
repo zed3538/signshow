@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 
-url = "https://www.nzsl.nz/signs/search?tag=Actions+and+activities"
-req = requests.get(url)
+soup = BeautifulSoup(requests.get("https://www.nzsl.nz/signs/search?tag=Actions+and+activities").content, "html.parser")
 
-soup = BeautifulSoup(req.content, "html.parser")
-
-print(soup.title.prettify())
+videos = soup.find_all('video')
+for video in videos:
+    print(video.source['src'])
