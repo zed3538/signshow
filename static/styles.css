@@ -230,3 +230,12 @@ button[type=submit] {
     font-size: 60px;
     border: 1px solid palegreen;
 }
+
+.visuals video {
+    border-radius: 20px;
+    margin: auto 5rem;
+}
+
+.visuals img {
+    border-radius: 20px;
+}
