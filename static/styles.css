@@ -21,6 +21,12 @@ img {
     border-radius: 5px;
 }
 
+h2 {
+    font-size: 25px;
+    text-align: center;
+    color: rgb(94, 11, 21);
+}
+
 /* nav styling */
 
 .site-nav {
@@ -231,11 +237,19 @@ button[type=submit] {
     border: 1px solid palegreen;
 }
 
+.visuals {
+    margin: 5rem;
+    display: flex;
+    justify-content: center;
+}
+
 .visuals video {
     border-radius: 20px;
-    margin: auto 5rem;
 }
 
 .visuals img {
+    margin: 0 5rem;
     border-radius: 20px;
+    height: 480px;
+    width: auto;
 }

@@ -47,6 +47,10 @@ def index():
     pages = get_pages()
     return render_template("index.html", pages=pages)
 
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
 @app.route('/login', methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -93,6 +97,10 @@ def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
     terms = query_db(sql, one=True)
     return render_template ("term.html", terms=terms)
+
+@app.route('/quiz')
+def quiz():
+    return render_template("quiz.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
