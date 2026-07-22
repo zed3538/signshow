@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
+{% from 'card.html' import Card %}
 {% block content %}
     {% if session['user'] %}
         <p class="welcome-msg">Welcome {{ session['user'][1] }}</p>
     {% endif %}
 
     <h1>Learn</h1>
+    <h2>part 1?</h2>
 
-    <ul>
-        {% for term in terms %}
-            <li><a href="learn/{{term[0]}}">{{term[1]}}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="learn-1">
+        <ul>
+            {% for term in terms %}
+                <li><a href="learn/{{term[0]}}">{{term[1]}}</a></li>
+            {% endfor %}
+        </ul>
+        <h3><a href="/quiz">Quiz yourself!</a></h3>
+    </div>
 
 {% endblock %}

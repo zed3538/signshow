@@ -253,3 +253,10 @@ button[type=submit] {
     height: 480px;
     width: auto;
 }
+
+.learn-1 {
+}
+
+.learn-1 li {
+    list-style: none;
+}

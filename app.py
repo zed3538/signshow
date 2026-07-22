@@ -42,6 +42,15 @@ def get_pages():
     ]
     return pages
 
+def get_lessons():
+    lessons = [
+        {
+            'title': 'Lesson 1',
+            'terms': '',
+        }
+    ]
+    return lessons
+
 @app.route('/')
 def index():
     pages = get_pages()
