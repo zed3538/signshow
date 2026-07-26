@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
+from time import sleep
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
@@ -25,13 +26,13 @@ def get_pages():
             'img_src': 'images/icon_photovideo.png',
             'img_alt': 'Use of photos and videos to help you visualise sign language gestures',
             'title': 'Clear visuals',
-            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
+            'summary': 'SignShow has clear visuals that demonstrate signs so they are easy to understand and imitate. The official NZSL website uses the same visuals.',
         },
         {
             'img_src': 'images/icon_photovideo.png',
             'img_alt': 'smiley face',
-            'title': 'ABC',
-            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
+            'title': 'Repetitive testing',
+            'summary': 'SignShow has a quiz section for every group of words you learn! You get to test yourself iteratively and you can see your progress towards learning a certain word.',
         },
         {
             'img_src': 'images/icon_photovideo.png',
@@ -41,15 +42,6 @@ def get_pages():
         }
     ]
     return pages
-
-def get_lessons():
-    lessons = [
-        {
-            'title': 'Lesson 1',
-            'terms': '',
-        }
-    ]
-    return lessons
 
 @app.route('/')
 def index():
@@ -86,9 +78,14 @@ def signup():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
-        query_db(sql,(username,hashed_password))
-        flash("Sign Up Successful!")
-        return redirect('/learn')
+        user_check = "SELECT username FROM user"
+        if username == "":
+            flash("Sign up failed. Please enter a valid username.")
+        else:
+            query_db(sql,(username,hashed_password))
+            flash("Sign up successful! You will be redirected in a few seconds.")
+            time.sleep(1)
+            return redirect('/learn')
     return render_template("signup.html")
 
 @app.route('/logout')
@@ -99,7 +96,8 @@ def logout():
 @app.route('/learn')
 def learn():
     terms = query_db("SELECT * FROM terms")
-    return render_template("learn.html", terms=terms)
+    quiz = query_db("SELECT * FROM quiz")
+    return render_template("learn.html", terms=terms, quiz=quiz)
 
 @app.route('/learn/<int:id>')
 def termLearn(id):
@@ -107,9 +105,9 @@ def termLearn(id):
     terms = query_db(sql, one=True)
     return render_template ("term.html", terms=terms)
 
-@app.route('/quiz')
-def quiz():
-    return render_template("quiz.html")
+@app.route('/learn/quiz-<int:id>')
+def quiz(id):
+    return render_template("quiz.html", questions=questions)
 
 if __name__ == "__main__":
     app.run(debug=True)

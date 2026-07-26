@@ -22,7 +22,7 @@ img {
 }
 
 h2 {
-    font-size: 25px;
+    font-size: 20                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      px;
     text-align: center;
     color: rgb(94, 11, 21);
 }
@@ -237,6 +237,8 @@ button[type=submit] {
     border: 1px solid palegreen;
 }
 
+/* term page styling */
+
 .visuals {
     margin: 5rem;
     display: flex;
@@ -254,9 +256,12 @@ button[type=submit] {
     width: auto;
 }
 
-.learn-1 {
+h3 {
+    text-align: center;
+    color: rgb(94, 11, 21);
 }
 
 .learn-1 li {
     list-style: none;
+    font-size: 30px;
 }
