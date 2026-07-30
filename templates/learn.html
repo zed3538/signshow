@@ -14,7 +14,9 @@
                 <li><a href="learn/{{term[0]}}">{{term[1]}}</a></li>
             {% endfor %}
         </ul>
-        <h3><a href="/learn/quiz-{{quiz[0]}}">Quiz yourself!</a></h3>
+        {% for quiz in quiz %}
+            <h3><a href="/learn/quiz-{{quiz[0]}}">Quiz yourself!</a></h3>
+        {% endfor %}
     </div>
 
 {% endblock %}

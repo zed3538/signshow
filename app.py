@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
-from time import sleep
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
 
 database = 'database.db'
+
+global user
 
 def query_db(sql,args=(),one=False):
     db = sqlite3.connect(database)
@@ -58,11 +60,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
-        global user
         user =  query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
-                session['user'] = user
+                user = session.get('user', None)
                 flash("Logged in successfully!")
                 redirect('/learn')
             else:
@@ -78,14 +79,15 @@ def signup():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
-        user_check = "SELECT username FROM user"
+        res = query_db(sql,(username,hashed_password))
         if username == "":
             flash("Sign up failed. Please enter a valid username.")
+        elif isinstance(res, Exception):
+            if isinstance(res, sqlite3.IntegrityError):
+                flash("Username already taken.")
         else:
-            query_db(sql,(username,hashed_password))
             flash("Sign up successful! You will be redirected in a few seconds.")
             time.sleep(1)
-            return redirect('/learn')
     return render_template("signup.html")
 
 @app.route('/logout')
@@ -95,9 +97,14 @@ def logout():
 
 @app.route('/learn')
 def learn():
-    terms = query_db("SELECT * FROM terms")
-    quiz = query_db("SELECT * FROM quiz")
-    return render_template("learn.html", terms=terms, quiz=quiz)
+    if not session.get('user', None):
+        flash("Please log in to access!")
+        session['redirect']='/learn'
+        return redirect('/login')
+    else:
+        terms = query_db("SELECT * FROM terms")
+        quiz = query_db("SELECT * FROM quiz")
+        return render_template("learn.html", terms=terms, quiz=quiz)
 
 @app.route('/learn/<int:id>')
 def termLearn(id):
@@ -107,12 +114,18 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>')
 def quiz(id):
+    sql = f"SELECT * FROM quiz WHERE id={id}"
+    questions = query_db(sql, one=True)
     return render_template("quiz.html", questions=questions)
 
+## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":
     app.run(debug=True)
     server = Server(app.wsgi_app)
     server.watch("templates/")
     server.watch("static/")
     server.watch("static/")
-    server.serve()
+    server.serve(
+        port=5000,
+        debug=True
+    )
