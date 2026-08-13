@@ -118,7 +118,7 @@ h1 {
 .button a {
     color: rgb(217, 202, 179);
     text-decoration: none;
-    font-size: 30px;
+    font-size: 20px;
     border-radius: 10px;
     background-color: rgb(94, 11, 21);
     padding: 1.5rem;
@@ -149,7 +149,7 @@ h1 {
 }
 
 .card p {
-    color: blueviolet;
+    color: rgb(94, 11, 21);
     text-align: center;
     padding-left: 3rem;
     padding-right: 3rem;
@@ -176,16 +176,20 @@ h5 {
 /* info section styling end*/
 /* login styling */
 
+.signup h1 {
+    font-size: 30px;
+}
+
 form {
     border-radius: 50px;
     background-color: rgb(140, 122, 107);
     padding: 100px;
-    width: 50rem;
-    margin: 0 auto;
+    width: 35rem;
+    margin: 0 auto 10rem auto;
 }
 
 input[type=text], input[type=password] {
-    font-size: 30px;
+    font-size: 20px;
     display: inline-block;
     margin: 8px 0;
     padding: 12px 20px;
@@ -197,12 +201,14 @@ input[type=text], input[type=password] {
 label[for=username], label[for=password] {
     text-align: center;
     display: inline-block;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 button[type=submit] {
-    color: blue;
+    color: rgb(94, 11, 21);
     font-size: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    
 }
 
 .submit {
@@ -214,10 +220,10 @@ button[type=submit] {
 .submit a {
     color: rgb(217, 202, 179);
     text-decoration: none;
-    font-size: 30px;
+    font-size: 20px;
     border-radius: 10px;
     background-color: rgb(94, 11, 21);
-    padding: 1.5rem;
+    padding: 1rem;
     margin: 2rem auto;
 }
 
@@ -233,8 +239,8 @@ button[type=submit] {
 }
 
 .welcome-msg {
-    font-size: 60px;
-    border: 1px solid palegreen;
+    font-size: 30px;
+    text-align: center;
 }
 
 /* term page styling */
@@ -263,5 +269,8 @@ h3 {
 
 .learn-1 li {
     list-style: none;
-    font-size: 30px;
+    font-size: 25px;
+    display: inline-block;
+    justify-content: center;
+    padding: 3rem 3rem;
 }

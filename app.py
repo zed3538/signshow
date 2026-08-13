@@ -63,9 +63,8 @@ def login():
         user =  query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
-                user = session.get('user', None)
-                flash("Logged in successfully!")
-                redirect('/learn')
+                session['user'] = user
+                return redirect('/learn')
             else:
                 flash("Password incorrect.")
         else:
@@ -79,15 +78,9 @@ def signup():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
-        res = query_db(sql,(username,hashed_password))
-        if username == "":
-            flash("Sign up failed. Please enter a valid username.")
-        elif isinstance(res, Exception):
-            if isinstance(res, sqlite3.IntegrityError):
-                flash("Username already taken.")
-        else:
-            flash("Sign up successful! You will be redirected in a few seconds.")
-            time.sleep(1)
+        query_db(sql,(username,hashed_password))
+        session['user'] = user
+        flash("Sign up successful!")
     return render_template("signup.html")
 
 @app.route('/logout')
@@ -99,7 +92,6 @@ def logout():
 def learn():
     if not session.get('user', None):
         flash("Please log in to access!")
-        session['redirect']='/learn'
         return redirect('/login')
     else:
         terms = query_db("SELECT * FROM terms")
@@ -114,9 +106,13 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>')
 def quiz(id):
+    sql_rand = "SELECT RAND()*(10-5)+5"
+    sql = f"SELECT * FROM terms WHERE id={sql_rand}"
+    terms = query_db(sql, one=True)
     sql = f"SELECT * FROM quiz WHERE id={id}"
     questions = query_db(sql, one=True)
-    return render_template("quiz.html", questions=questions)
+    return render_template("quiz.html", questions=questions, terms=terms)
+
 
 ## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":
