@@ -64,7 +64,7 @@ def login():
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
-                return redirect('/learn')
+                print("working fine")
             else:
                 flash("Password incorrect.")
         else:
@@ -106,8 +106,7 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>')
 def quiz(id):
-    sql_rand = "SELECT RAND()*(10-5)+5"
-    sql = f"SELECT * FROM terms WHERE id={sql_rand}"
+    sql = f"SELECT * FROM terms WHERE id={id}"
     terms = query_db(sql, one=True)
     sql = f"SELECT * FROM quiz WHERE id={id}"
     questions = query_db(sql, one=True)

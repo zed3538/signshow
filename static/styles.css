@@ -262,9 +262,22 @@ button[type=submit] {
     width: auto;
 }
 
+.welcome-msg {
+    color: rgb(94, 11, 21);
+}
+
 h3 {
     text-align: center;
     color: rgb(94, 11, 21);
+}
+
+.learn-1{
+    border: 1px red solid;
+    padding-bottom: 2rem;
+}
+
+.learn-1 ul {
+    color: rgb(130, 50, 61);
 }
 
 .learn-1 li {
@@ -273,4 +286,5 @@ h3 {
     display: inline-block;
     justify-content: center;
     padding: 3rem 3rem;
+    
 }
