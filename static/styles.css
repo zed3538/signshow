@@ -288,3 +288,21 @@ h3 {
     padding: 3rem 3rem;
     
 }
+
+button {
+    background-color: aqua;
+    border-radius: 1rem;
+    display: flex;
+    width: 10rem;
+    margin: 2rem auto 2rem auto;
+}
+
+button:hover {
+    background-color: green;
+}
+
+p {
+    color: rgb(94, 11, 21);
+    margin-left: 2rem;
+    margin-right: 2rem;
+}

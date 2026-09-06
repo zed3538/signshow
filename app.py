@@ -3,6 +3,7 @@ import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
+import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
@@ -39,8 +40,8 @@ def get_pages():
         {
             'img_src': 'images/icon_photovideo.png',
             'img_alt': 'smiley face',
-            'title': 'ABC',
-            'summary': 'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.',
+            'title': 'Simple and easy to use',
+            'summary': 'It is straightforward and easy to use.'
         }
     ]
     return pages
@@ -60,11 +61,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
+        ## The print lines are just for bug tracking
+        print("working here")
         user =  query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
                 print("working fine")
+                return redirect("/learn")
             else:
                 flash("Password incorrect.")
         else:
@@ -79,6 +83,7 @@ def signup():
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
         query_db(sql,(username,hashed_password))
+        ## come back to this later to make error when duplicate user
         session['user'] = user
         flash("Sign up successful!")
     return render_template("signup.html")
@@ -96,8 +101,11 @@ def learn():
     else:
         terms = query_db("SELECT * FROM terms")
         quiz = query_db("SELECT * FROM quiz")
-        return render_template("learn.html", terms=terms, quiz=quiz)
+        terms2 = query_db("SELECT term FROM terms WHERE id > 10")
+        return render_template("learn.html", terms=terms, quiz=quiz, terms2=terms2)
 
+# random shuffle
+# need list of ids of previously seen questions
 @app.route('/learn/<int:id>')
 def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
@@ -106,12 +114,10 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>')
 def quiz(id):
-    sql = f"SELECT * FROM terms WHERE id={id}"
-    terms = query_db(sql, one=True)
     sql = f"SELECT * FROM quiz WHERE id={id}"
+    quiz = query_db(sql, one=True)
     questions = query_db(sql, one=True)
-    return render_template("quiz.html", questions=questions, terms=terms)
-
+    return render_template("quiz.html", questions=questions, quiz=quiz)
 
 ## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":
