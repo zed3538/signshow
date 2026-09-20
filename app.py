@@ -112,11 +112,18 @@ def termLearn(id):
     terms = query_db(sql, one=True)
     return render_template ("term.html", terms=terms)
 
-@app.route('/learn/quiz-<int:id>')
+@app.route('/learn/quiz-<int:id>', methods=["GET","POST"])
 def quiz(id):
     sql = f"SELECT * FROM quiz WHERE id={id}"
     quiz = query_db(sql, one=True)
     questions = query_db(sql, one=True)
+
+    if answer = quiz[7]:
+        flash("Correct!")
+        redirect(f"/learn/quiz-{id+1}")
+    else:
+        flash("Incorrect. Try again.")
+
     return render_template("quiz.html", questions=questions, quiz=quiz)
 
 ## Livereload to allow automatic website refresh when saving files
