@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block content%}
+{% block content %}
 
 <h1>What is this sign?</h1>
 
@@ -10,6 +10,9 @@
 
 <div class="answers">
     <button type="submit" onclick="alert('correct')">{{quiz[3]}}</button>
+        {{% for quiz in quiz %}}
+        <button type="submit" onclick="alert('incorrect')">{{quiz[4]}}</button>
+        {{% endfor %}}
     <button type="submit" onclick="alert('incorrect')">{{quiz[4]}}</button>
 </div>
 

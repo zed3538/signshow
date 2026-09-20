@@ -272,7 +272,6 @@ h3 {
 }
 
 .learn-1{
-    border: 1px red solid;
     padding-bottom: 2rem;
 }
 
@@ -303,6 +302,8 @@ button:hover {
 
 p {
     color: rgb(94, 11, 21);
-    margin-left: 2rem;
-    margin-right: 2rem;
+}
+
+.about {
+    width: auto;
 }
