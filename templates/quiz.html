@@ -8,13 +8,15 @@
     Your browser does not support the video tag.
 </video>
 
-    <button type="submit">{{quiz[3]}}</button>
-    <button type="submit">{{quiz[4]}}</button>
-    <button type="submit">{{quiz[5]}}</button>
-    <button type="submit">{{quiz[6]}}</button>
+<div>
+    <button onclick="checkQuestion('fwjeiwfejo')"></button>
+</div>
 
-<!-- one column for inc ans instead of 3 -->
+{% for each question in questions %}
+    <button onclick="checkQuestion(question['text'])">{{question['text']}}</button>
+    {% endfor %}
 
+<!-- js stuff first, deal with this later -->
 <!-- endpoint, marker point, compare vid with data from buttons, do this do that -->
 
 {% endblock %}

@@ -5,6 +5,7 @@ sign up functionality: https://stackoverflow.com/questions/35415469/sqlite-const
     https://stackoverflow.com/questions/36518628/sqlite3-integrityerror-unique-constraint-failed-when-inserting-a-value 
 redirecting: https://www.geeksforgeeks.org/python/python-flask-redirect-and-errors/ 
 random number: https://www.w3schools.com/SQL/func_sqlserver_rand.asp
+quiz functionality: https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-button-onclick-event
 
 icons
 photo/video: https://fontawesome.com/icons/classic/solid/photo-film

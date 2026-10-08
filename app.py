@@ -61,13 +61,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
-        ## The print lines are just for bug tracking
-        print("working here")
         user =  query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
-                print("working fine")
                 return redirect("/learn")
             else:
                 flash("Password incorrect.")
@@ -102,7 +99,7 @@ def learn():
         terms = query_db("SELECT * FROM terms")
         quiz = query_db("SELECT * FROM quiz")
         terms2 = query_db("SELECT term FROM terms WHERE id > 10")
-        return render_template("learn.html", terms=terms, quiz=quiz, terms2=terms2)
+        return render_template("learn.html", terms=terms, quiz=quiz, terms2=terms2, id=id)
 
 # random shuffle
 # need list of ids of previously seen questions
@@ -110,21 +107,38 @@ def learn():
 def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
     terms = query_db(sql, one=True)
-    return render_template ("term.html", terms=terms)
+    return render_template("term.html", terms=terms)
 
 @app.route('/learn/quiz-<int:id>', methods=["GET","POST"])
 def quiz(id):
     sql = f"SELECT * FROM quiz WHERE id={id}"
     quiz = query_db(sql, one=True)
     questions = query_db(sql, one=True)
+    answer = request.form
 
-    if answer = quiz[7]:
+    # checks if the submitted answer matches the correct term in the database
+    if answer == quiz[7]:
         flash("Correct!")
-        redirect(f"/learn/quiz-{id+1}")
+        sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
     else:
-        flash("Incorrect. Try again.")
+        flash("Incorrect.")
+        sql = "INSERT OR IGNORE INTO progress (status) VALUES ('not learned')"
+        print(answer)
+        # sql = "SELECT farm.*, farmType.type FROM farms LEFT JOIN farmType ON farms.farmtype = farmType.id" *** reference this
+    status = query_db(sql, one=True)
+    # redirects to next question regardless of answer
+    redirect(f"/learn/quiz-{id+1}")
 
-    return render_template("quiz.html", questions=questions, quiz=quiz)
+    return render_template("quiz.html", questions=questions, quiz=quiz, status=status, answer=answer)
+
+@app.route("/correct/", methods=["GET","POST"])
+def correct(id):
+    ans_correct = "correct!! yay"
+    quiz = query_db(f"SELECT * FROM quiz WHERE id={id}")
+    questions = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
+    join = query_db("SELECT progress.*, user.id FROM progress LEFT JOIN user ON progress.user_id = user.id")
+
+    return render_template("quiz.html", ans_correct=ans_correct, quiz=quiz, questions=questions, join=join)
 
 ## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":
