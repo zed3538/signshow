@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, flash, session, redirect
 import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
-import time
 import random
 
 app = Flask(__name__)
@@ -62,6 +61,7 @@ def login():
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
         user =  query_db(sql=sql,args=(username,),one=True)
+        print("fine here")
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
@@ -113,23 +113,27 @@ def termLearn(id):
 def quiz(id):
     sql = f"SELECT * FROM quiz WHERE id={id}"
     quiz = query_db(sql, one=True)
-    questions = query_db(sql, one=True)
-    answer = request.form
+    question = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
+    options = query_db(f"SELECT opt1, opt2, opt3, opt4, correct FROM quiz WHERE id={id}", one=True)
 
-    # checks if the submitted answer matches the correct term in the database
-    if answer == quiz[7]:
-        flash("Correct!")
-        sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
-    else:
-        flash("Incorrect.")
-        sql = "INSERT OR IGNORE INTO progress (status) VALUES ('not learned')"
-        print(answer)
-        # sql = "SELECT farm.*, farmType.type FROM farms LEFT JOIN farmType ON farms.farmtype = farmType.id" *** reference this
-    status = query_db(sql, one=True)
-    # redirects to next question regardless of answer
-    redirect(f"/learn/quiz-{id+1}")
+    random.randint(id)
 
-    return render_template("quiz.html", questions=questions, quiz=quiz, status=status, answer=answer)
+    options = []
+
+    # # checks if the submitted answer matches the correct term in the database
+    # if answer == quiz[7]:
+    #     flash("Correct!")
+    #     sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
+    # else:
+    #     flash("Incorrect.")
+    #     sql = "INSERT OR IGNORE INTO progress (status) VALUES ('not learned')"
+    #     print(answer)
+    #     # sql = "SELECT farm.*, farmType.type FROM farms LEFT JOIN farmType ON farms.farmtype = farmType.id" *** reference this
+    # status = query_db(sql, one=True)
+    # # redirects to next question regardless of answer
+    # redirect(f"/learn/quiz-{id+1}")
+
+    return render_template("quiz.html", question=question, quiz=quiz, options=options)
 
 @app.route("/correct/", methods=["GET","POST"])
 def correct(id):

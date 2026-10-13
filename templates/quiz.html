@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>What is this sign?</h1>
+<h1>{{quiz[1]}}</h1>
 
-<video width="480" height="320" loop autoplay muted>
-    <source src={{questions[2]}}>
-    Your browser does not support the video tag.
-</video>
 
-<div>
-    <button onclick="checkQuestion('fwjeiwfejo')"></button>
+<div class="quiz-media">
+    <video width="480" height="320" loop autoplay muted>
+        <source src={{quiz[2]}}>
+        Your browser does not support the video tag.
+    </video>
 </div>
 
-{% for each question in questions %}
-    <button onclick="checkQuestion(question['text'])">{{question['text']}}</button>
-    {% endfor %}
-
-<!-- js stuff first, deal with this later -->
-<!-- endpoint, marker point, compare vid with data from buttons, do this do that -->
+<script src="scripting.js"></script>
+    <div class="quiz-choices">
+        {% for option in options %}
+            <button onclick="checkQuestion(question[Text])">{{option}}</button>
+        {% endfor %}
+        <!-- somehow the for loop isn't working... -->
+    </div>
 
 {% endblock %}

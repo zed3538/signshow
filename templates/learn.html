@@ -15,17 +15,18 @@
             {% endfor %}
         </ul>
         {% for quiz in quiz %}
+        <div>
             <h3><a href="/learn/quiz-{{quiz[0]}}">Question {{quiz[0]}}</a></h3>
+        </div>
         {% endfor %}
     </div>
 
     <div class="learn-2">
         <ul>
             {% for term in terms2 %}
-                <li><a href="learn/{{term[0]}}"></a></li>
+                <li><a href="learn/{{term[0]}}">{{term[0]}}</a></li>
             {% endfor %}
         </ul>
-
     </div>
 
 {% endblock %}
