@@ -101,8 +101,6 @@ def learn():
         terms2 = query_db("SELECT term FROM terms WHERE id > 10")
         return render_template("learn.html", terms=terms, quiz=quiz, terms2=terms2, id=id)
 
-# random shuffle
-# need list of ids of previously seen questions
 @app.route('/learn/<int:id>')
 def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
@@ -111,14 +109,32 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>', methods=["GET","POST"])
 def quiz(id):
-    sql = f"SELECT * FROM quiz WHERE id={id}"
+    sql = f"SELECT * FROM terms WHERE id = {id}"
     quiz = query_db(sql, one=True)
-    question = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
-    options = query_db(f"SELECT opt1, opt2, opt3, opt4, correct FROM quiz WHERE id={id}", one=True)
 
-    random.randint(id)
+    # Randomly generates an id 4 times to grab a term from and adds it to the options list
+    term_ids = []
+    # sql = query_db(f"SELECT term FROM terms WHERE id = {id}", one=True)
+    term_ids.append(id)
 
-    options = []
+    # Loops generating an id and checking that it is not a previously encountered word or a duplicate word until there are 2-4 unique options
+
+    # USING A FUNCTION MAKES THE PAGE NOT LOAD FOR SOME REASON
+
+    while len(term_ids) < 4:
+        term_id = random.randint(1, 9) # TODO: Work out how many terms are in the db using COUNT
+        while term_id in term_ids:
+            term_id = random.randint(1, 9)
+        term_ids.append(term_id)
+        for term_id in term_ids:
+            terms = query_db(f"SELECT term FROM terms WHERE id = {term_id}", one=True)
+        
+        print(terms)
+
+    options = list(dict.fromkeys(term_ids))
+
+    options = terms
+    random.shuffle(options)
 
     # # checks if the submitted answer matches the correct term in the database
     # if answer == quiz[7]:
@@ -133,16 +149,17 @@ def quiz(id):
     # # redirects to next question regardless of answer
     # redirect(f"/learn/quiz-{id+1}")
 
-    return render_template("quiz.html", question=question, quiz=quiz, options=options)
+    return render_template("quiz.html", quiz=quiz, options=options)
 
-@app.route("/correct/", methods=["GET","POST"])
-def correct(id):
-    ans_correct = "correct!! yay"
-    quiz = query_db(f"SELECT * FROM quiz WHERE id={id}")
-    questions = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
-    join = query_db("SELECT progress.*, user.id FROM progress LEFT JOIN user ON progress.user_id = user.id")
+# @app.route("/correct/", methods=["GET","POST"])
+# def correct(id):
+#     # MAKE PROPER JOIN LATER
+#     # ans_correct = "correct!! yay"
+#     # quiz = query_db(f"SELECT * FROM quiz WHERE id={id}")
+#     # questions = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
+#     # join = query_db("SELECT progress.*, user.id FROM progress LEFT JOIN user ON progress.user_id = user.id")
 
-    return render_template("quiz.html", ans_correct=ans_correct, quiz=quiz, questions=questions, join=join)
+#     return render_template("quiz.html", ans_correct=ans_correct, quiz=quiz, questions=questions, join=join)
 
 ## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":

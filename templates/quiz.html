@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>{{quiz[1]}}</h1>
+<!-- scripts are treated as the same static as images -->
+<script src="{{url_for('static', filename='scripting.js')}}"></script>
 
+<h1>What does this mean?</h1>
 
 <div class="quiz-media">
     <video width="480" height="320" loop autoplay muted>
@@ -11,12 +13,14 @@
     </video>
 </div>
 
-<script src="scripting.js"></script>
     <div class="quiz-choices">
         {% for option in options %}
-            <button onclick="checkQuestion(question[Text])">{{option}}</button>
+            <button type="button" 
+                onclick="checkQuestion()" 
+                value="{{option}}"
+                {% if option == quiz[1] %} class="correct" {% endif %}
+            >{{option}}</button>
         {% endfor %}
-        <!-- somehow the for loop isn't working... -->
     </div>
 
 {% endblock %}
