@@ -331,3 +331,8 @@ p {
     justify-content: center;
     align-items: center;
 }
+
+.quiz-question h1 {
+    font-size: 30px;
+    margin: 3rem auto;
+}

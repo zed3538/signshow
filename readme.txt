@@ -6,6 +6,8 @@ sign up functionality: https://stackoverflow.com/questions/35415469/sqlite-const
 redirecting: https://www.geeksforgeeks.org/python/python-flask-redirect-and-errors/ 
 random number: https://www.w3schools.com/SQL/func_sqlserver_rand.asp
 quiz functionality: https://stackoverflow.com/questions/42601478/flask-calling-python-function-on-button-onclick-event
+conditional html class: https://www.iditect.com/faq/python/how-to-add-conditional-css-class-based-on-python-if-statement.html 
+event handling without eventlistener: https://stackoverflow.com/questions/27465788/why-the-event-object-is-undefined-in-my-case
 
 icons
 photo/video: https://fontawesome.com/icons/classic/solid/photo-film

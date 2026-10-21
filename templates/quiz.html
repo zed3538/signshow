@@ -4,7 +4,7 @@
 <!-- scripts are treated as the same static as images -->
 <script src="{{url_for('static', filename='scripting.js')}}"></script>
 
-<h1>What does this mean?</h1>
+<div class="quiz-question"><h1>What does this mean?</h1></div>
 
 <div class="quiz-media">
     <video width="480" height="320" loop autoplay muted>
@@ -16,9 +16,9 @@
     <div class="quiz-choices">
         {% for option in options %}
             <button type="button" 
-                onclick="checkQuestion()" 
+                onclick="checkQuestion(event)"
                 value="{{option}}"
-                {% if option == quiz[1] %} class="correct" {% endif %}
+                class="{% if option == quiz[1] %} correct {% else %} incorrect {% endif %}"
             >{{option}}</button>
         {% endfor %}
     </div>

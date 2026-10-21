@@ -11,6 +11,7 @@ database = 'database.db'
 
 global user
 
+# Function allows interaction with the database. 
 def query_db(sql,args=(),one=False):
     db = sqlite3.connect(database)
     cursor = db.cursor()
@@ -20,8 +21,8 @@ def query_db(sql,args=(),one=False):
     db.close()
     return (results[0] if results else None) if one else results
 
-## routes and stuff
-
+# Routes
+# A dictionary to populate the cards on the main landing page.
 def get_pages():
     pages = [
         {
@@ -45,15 +46,18 @@ def get_pages():
     ]
     return pages
 
+# Main page. It calls the get_pages dictionary to populate the cards.
 @app.route('/')
 def index():
     pages = get_pages()
     return render_template("index.html", pages=pages)
 
+# About page.
 @app.route('/about')
 def about():
     return render_template("about.html")
 
+# Login page. Uses a form for the user to submit, then checks against the database to verify if the username and password match. If only the user exists in the database, 
 @app.route('/login', methods=["GET","POST"])
 def login():
     if request.method == "POST":
@@ -61,7 +65,6 @@ def login():
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
         user =  query_db(sql=sql,args=(username,),one=True)
-        print("fine here")
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
@@ -72,6 +75,7 @@ def login():
             flash("User does not exist.")
     return render_template('login.html')
 
+# Signup page. A form is used for the user to submit their username and password. The password is hashed for the user's security before being inserted into the database.
 @app.route('/signup', methods=["GET","POST"])
 def signup():
     if request.method == "POST":
@@ -79,7 +83,7 @@ def signup():
         password = request.form['password']
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
-        query_db(sql,(username,hashed_password))
+        user = query_db(sql,(username,hashed_password))
         ## come back to this later to make error when duplicate user
         session['user'] = user
         flash("Sign up successful!")
@@ -90,6 +94,7 @@ def logout():
     session['user'] = None
     return redirect('/')
 
+# Learn page. It first checks if the user is logged in. If not, they are redirected to the login page. Otherwise, it shows all the learning terms and questions for the user to choose from.
 @app.route('/learn')
 def learn():
     if not session.get('user', None):
@@ -109,32 +114,28 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>', methods=["GET","POST"])
 def quiz(id):
-    sql = f"SELECT * FROM terms WHERE id = {id}"
+    sql = f"SELECT * FROM terms WHERE id={id}"
     quiz = query_db(sql, one=True)
 
-    # Randomly generates an id 4 times to grab a term from and adds it to the options list
     term_ids = []
-    # sql = query_db(f"SELECT term FROM terms WHERE id = {id}", one=True)
+    option_terms = []
     term_ids.append(id)
 
-    # Loops generating an id and checking that it is not a previously encountered word or a duplicate word until there are 2-4 unique options
-
-    # USING A FUNCTION MAKES THE PAGE NOT LOAD FOR SOME REASON
-
+    # Loops generating an id and checking that it is not a duplicate word until there are 4 unique options.
     while len(term_ids) < 4:
         term_id = random.randint(1, 9) # TODO: Work out how many terms are in the db using COUNT
         while term_id in term_ids:
             term_id = random.randint(1, 9)
         term_ids.append(term_id)
-        for term_id in term_ids:
-            terms = query_db(f"SELECT term FROM terms WHERE id = {term_id}", one=True)
-        
-        print(terms)
+    
+    # Grabs the associated terms from the database according to the ids then puts it into a separate list.
+    for term_id in term_ids:
+        grabbed_term = query_db(f"SELECT term FROM terms WHERE id={term_id}", one=True)
+        grabbed_term = grabbed_term[0]
+        option_terms.append(grabbed_term)
 
-    options = list(dict.fromkeys(term_ids))
-
-    options = terms
-    random.shuffle(options)
+    print(*option_terms)
+    random.shuffle(option_terms)
 
     # # checks if the submitted answer matches the correct term in the database
     # if answer == quiz[7]:
@@ -149,17 +150,9 @@ def quiz(id):
     # # redirects to next question regardless of answer
     # redirect(f"/learn/quiz-{id+1}")
 
-    return render_template("quiz.html", quiz=quiz, options=options)
+    # TODO: MAKE JOIN THING ASAP
 
-# @app.route("/correct/", methods=["GET","POST"])
-# def correct(id):
-#     # MAKE PROPER JOIN LATER
-#     # ans_correct = "correct!! yay"
-#     # quiz = query_db(f"SELECT * FROM quiz WHERE id={id}")
-#     # questions = query_db(f"SELECT question, media FROM quiz WHERE id={id}")
-#     # join = query_db("SELECT progress.*, user.id FROM progress LEFT JOIN user ON progress.user_id = user.id")
-
-#     return render_template("quiz.html", ans_correct=ans_correct, quiz=quiz, questions=questions, join=join)
+    return render_template("quiz.html", quiz=quiz, options=option_terms, option=quiz[1])
 
 ## Livereload to allow automatic website refresh when saving files
 if __name__ == "__main__":
