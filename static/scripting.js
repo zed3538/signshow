@@ -1,12 +1,12 @@
 function right() {
-    console.log("right");
+    alert("Correct!");
+    window.location.href = '/learn/new-question';
 }
 
 function wrong() {
-    console.log("wrong");
+    alert("Incorrect!")
 }
 
-console.log("Scripts loaded")
 function checkQuestion(event) {
     console.log(event.target);
     if (event.target.classList.contains('correct')) {

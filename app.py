@@ -3,13 +3,12 @@ import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
+import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
 
 database = 'database.db'
-
-global user
 
 # Function allows interaction with the database. 
 def query_db(sql,args=(),one=False):
@@ -70,7 +69,7 @@ def login():
                 session['user'] = user
                 return redirect("/learn")
             else:
-                flash("Password incorrect.")
+                flash("Password incorrect.", "error")
         else:
             flash("User does not exist.")
     return render_template('login.html')
@@ -84,7 +83,7 @@ def signup():
         hashed_password = generate_password_hash(password)
         sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
         user = query_db(sql,(username,hashed_password))
-        ## come back to this later to make error when duplicate user
+        ## come back to this later to make error when user is invalid (symbols)
         session['user'] = user
         flash("Sign up successful!")
     return render_template("signup.html")
@@ -112,8 +111,11 @@ def termLearn(id):
     terms = query_db(sql, one=True)
     return render_template("term.html", terms=terms)
 
-@app.route('/learn/quiz-<int:id>', methods=["GET","POST"])
+@app.route('/learn/quiz-<int:id>')
 def quiz(id):
+
+    session['id'] = id
+
     sql = f"SELECT * FROM terms WHERE id={id}"
     quiz = query_db(sql, one=True)
 
@@ -122,10 +124,13 @@ def quiz(id):
     term_ids.append(id)
 
     # Loops generating an id and checking that it is not a duplicate word until there are 4 unique options.
+    max_terms = query_db(f"SELECT COUNT(term) FROM terms", one=True)
+    max_terms = max_terms[0]
+
     while len(term_ids) < 4:
-        term_id = random.randint(1, 9) # TODO: Work out how many terms are in the db using COUNT
+        term_id = random.randint(1, (max_terms))
         while term_id in term_ids:
-            term_id = random.randint(1, 9)
+            term_id = random.randint(1, (max_terms))
         term_ids.append(term_id)
     
     # Grabs the associated terms from the database according to the ids then puts it into a separate list.
@@ -134,10 +139,9 @@ def quiz(id):
         grabbed_term = grabbed_term[0]
         option_terms.append(grabbed_term)
 
-    print(*option_terms)
     random.shuffle(option_terms)
 
-    # # checks if the submitted answer matches the correct term in the database
+    # checks if the submitted answer matches the correct term in the database
     # if answer == quiz[7]:
     #     flash("Correct!")
     #     sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
@@ -152,9 +156,37 @@ def quiz(id):
 
     # TODO: MAKE JOIN THING ASAP
 
-    return render_template("quiz.html", quiz=quiz, options=option_terms, option=quiz[1])
+    return render_template("quiz.html", quiz=quiz, options=option_terms, option=quiz[1], id=id)
 
-## Livereload to allow automatic website refresh when saving files
+# New question route is not presented as a page but is a "helper" of sorts to redirect the user after they interact with the buttons.
+@app.route('/learn/new-question')
+def newQuestion():
+    sql = "SELECT * FROM terms"
+    quiz = query_db(sql, one=True)
+
+    sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
+    # "SELECT user.id, terms.id FROM users INNER JOIN terms ON progress.user_id"
+    # term_status = query_db(sql, one=True)
+
+    question_ids = []
+    question_ids = tuple(question_ids)
+    # This runs the first time that newQuestion is called and makes a list of 10 questions for the user to be redirected to later.
+    if not session.get(question_ids, None):
+        while len(question_ids) < 10:
+            grabbed_id = query_db(f"SELECT id FROM terms WHERE NOT id = {1} LIMIT 9", one=True)
+            question_ids = list(question_ids)
+            question_ids.append(grabbed_id)
+        print(question_ids)
+        id = question_ids[0]
+        return redirect(f'/learn/quiz-{id}')
+    else:
+        session.get(current_question, None)
+        current_question = current_question + 1
+        session.get(question_ids, None)
+        redirect('/learn/quiz-<int:id>')
+    return render_template("quiz.html", quiz=quiz)
+
+# Livereload to allow automatic website refresh when saving files.
 if __name__ == "__main__":
     app.run(debug=True)
     server = Server(app.wsgi_app)

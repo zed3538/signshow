@@ -332,6 +332,10 @@ p {
     align-items: center;
 }
 
+.quiz-choices {
+    font-size: 20px;
+}
+
 .quiz-question h1 {
     font-size: 30px;
     margin: 3rem auto;

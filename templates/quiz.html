@@ -17,8 +17,7 @@
         {% for option in options %}
             <button type="button" 
                 onclick="checkQuestion(event)"
-                value="{{option}}"
-                class="{% if option == quiz[1] %} correct {% else %} incorrect {% endif %}"
+                class="{% if option == quiz[1] %}correct{% else %}incorrect{% endif %}"
             >{{option}}</button>
         {% endfor %}
     </div>
