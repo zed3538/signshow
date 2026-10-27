@@ -113,9 +113,6 @@ def termLearn(id):
 
 @app.route('/learn/quiz-<int:id>')
 def quiz(id):
-
-    session['id'] = id
-
     sql = f"SELECT * FROM terms WHERE id={id}"
     quiz = query_db(sql, one=True)
 
@@ -141,49 +138,48 @@ def quiz(id):
 
     random.shuffle(option_terms)
 
-    # checks if the submitted answer matches the correct term in the database
-    # if answer == quiz[7]:
-    #     flash("Correct!")
-    #     sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
-    # else:
-    #     flash("Incorrect.")
-    #     sql = "INSERT OR IGNORE INTO progress (status) VALUES ('not learned')"
-    #     print(answer)
-    #     # sql = "SELECT farm.*, farmType.type FROM farms LEFT JOIN farmType ON farms.farmtype = farmType.id" *** reference this
-    # status = query_db(sql, one=True)
-    # # redirects to next question regardless of answer
-    # redirect(f"/learn/quiz-{id+1}")
-
-    # TODO: MAKE JOIN THING ASAP
+    session['currentQuestion'] = id
 
     return render_template("quiz.html", quiz=quiz, options=option_terms, option=quiz[1], id=id)
 
 # New question route is not presented as a page but is a "helper" of sorts to redirect the user after they interact with the buttons.
 @app.route('/learn/new-question')
 def newQuestion():
-    sql = "SELECT * FROM terms"
-    quiz = query_db(sql, one=True)
-
-    sql = "INSERT OR IGNORE INTO progress (status) VALUES ('learned')"
-    # "SELECT user.id, terms.id FROM users INNER JOIN terms ON progress.user_id"
-    # term_status = query_db(sql, one=True)
-
-    question_ids = []
-    question_ids = tuple(question_ids)
-    # This runs the first time that newQuestion is called and makes a list of 10 questions for the user to be redirected to later.
-    if not session.get(question_ids, None):
-        while len(question_ids) < 10:
-            grabbed_id = query_db(f"SELECT id FROM terms WHERE NOT id = {1} LIMIT 9", one=True)
-            question_ids = list(question_ids)
-            question_ids.append(grabbed_id)
-        print(question_ids)
-        id = question_ids[0]
+    # This block runs the first time the user goes on this route and makes a list of ids
+    if not session.get('question_ids', None):
+        session['question_ids'] = []
+        grabbed_ids = query_db(f"SELECT id FROM terms WHERE NOT id={1}", one=True)
+        session['question_ids'].append(grabbed_ids)
+        id = grabbed_ids[0]
+        session['currentQuestion'] = id
         return redirect(f'/learn/quiz-{id}')
+    # This block runs the next time the user is on this route and 
     else:
-        session.get(current_question, None)
-        current_question = current_question + 1
-        session.get(question_ids, None)
-        redirect('/learn/quiz-<int:id>')
+        session.get('currentQuestion', None)
+        session['currentQuestion'] = session['currentQuestion']+1
+        id = session['currentQuestion']
+        return redirect(f'/learn/quiz-{id}')
+    # sql = "SELECT * FROM terms"
+    # quiz = query_db(sql, one=True)
+    # # "SELECT user.id, terms.id FROM users INNER JOIN terms ON progress.user_id"
+    # # term_status = query_db(sql, one=True)
+
+    # question_ids = []
+    # current_question = 1
+    # # This runs the first time that newQuestion is called and makes a list of 10 questions for the user to be redirected to later.
+    # if not session.get(question_ids, None):
+    #     grabbed_id = query_db(f"SELECT id FROM terms WHERE NOT id={1}")
+    #     question_ids.append(grabbed_id)
+    #     print(question_ids)
+    #     id = question_ids[0]
+    #     print(id)
+    #     return redirect(f'/learn/quiz-{id}+1')
+    # else:
+    #     session.get(current_question, None)
+    #     current_question = current_question + 1
+    #     session.get(question_ids, None)
+    #     print(question_ids)
+    #     redirect(f'/learn/quiz-{id}')
     return render_template("quiz.html", quiz=quiz)
 
 # Livereload to allow automatic website refresh when saving files.
