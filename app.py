@@ -3,15 +3,14 @@ import sqlite3
 from livereload import Server
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
-import time
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "SuperSecretKey"
 
 database = 'database.db'
 
-# Function allows interaction with the database. 
-def query_db(sql,args=(),one=False):
+# Function allows interaction with the database.
+def query_db(sql, args=(), one=False):
     db = sqlite3.connect(database)
     cursor = db.cursor()
     cursor.execute(sql, args)
@@ -56,17 +55,18 @@ def index():
 def about():
     return render_template("about.html")
 
-# Login page. Uses a form for the user to submit, then checks against the database to verify if the username and password match. If only the user exists in the database, 
+# Login page. Uses a form for the user to submit, then checks against the database to verify if the username and password match. If only the user exists in the database, it'll flash an error message.
 @app.route('/login', methods=["GET","POST"])
 def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
         sql = "SELECT * FROM user WHERE username = ?"
-        user =  query_db(sql=sql,args=(username,),one=True)
+        user = query_db(sql=sql,args=(username,),one=True)
         if user:
             if check_password_hash(user[2],password):
                 session['user'] = user
+                sql = "SELECT id FROM user WHERE username = ?"
                 return redirect("/learn")
             else:
                 flash("Password incorrect.", "error")
@@ -80,12 +80,14 @@ def signup():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
-        sql = "INSERT or IGNORE INTO user (username,password) VALUES (?,?)"
-        user = query_db(sql,(username,hashed_password))
-        ## come back to this later to make error when user is invalid (symbols)
-        session['user'] = user
-        flash("Sign up successful!")
+        if username.isalpha():
+            hashed_password = generate_password_hash(password)
+            sql = "INSERT or IGNORE INTO user (username, password) VALUES (?,?)"
+            user = query_db(sql, (username, hashed_password))
+            session['user'] = user
+            flash("Sign up successful!")
+        else:
+            flash("Sign up unsuccessful. Please check that your username only has letters, numbers, and no spaces!")
     return render_template("signup.html")
 
 @app.route('/logout')
@@ -99,12 +101,12 @@ def learn():
     if not session.get('user', None):
         flash("Please log in to access!")
         return redirect('/login')
+
     else:
         terms = query_db("SELECT * FROM terms")
-        quiz = query_db("SELECT * FROM quiz")
-        terms2 = query_db("SELECT term FROM terms WHERE id > 10")
-        return render_template("learn.html", terms=terms, quiz=quiz, terms2=terms2, id=id)
-
+        quiz = query_db("SELECT id FROM quiz", one=True)
+        return render_template("learn.html", terms=terms, quiz=quiz, id=id)
+    
 @app.route('/learn/<int:id>')
 def termLearn(id):
     sql = f"SELECT * FROM terms WHERE id={id}"
@@ -121,7 +123,7 @@ def quiz(id):
     term_ids.append(id)
 
     # Loops generating an id and checking that it is not a duplicate word until there are 4 unique options.
-    max_terms = query_db(f"SELECT COUNT(term) FROM terms", one=True)
+    max_terms = query_db("SELECT COUNT(term) FROM terms", one=True)
     max_terms = max_terms[0]
 
     while len(term_ids) < 4:
@@ -129,10 +131,12 @@ def quiz(id):
         while term_id in term_ids:
             term_id = random.randint(1, (max_terms))
         term_ids.append(term_id)
-    
+
     # Grabs the associated terms from the database according to the ids then puts it into a separate list.
     for term_id in term_ids:
         grabbed_term = query_db(f"SELECT term FROM terms WHERE id={term_id}", one=True)
+        if grabbed_term is None:
+            return redirect('/learn')
         grabbed_term = grabbed_term[0]
         option_terms.append(grabbed_term)
 
@@ -145,7 +149,7 @@ def quiz(id):
 # New question route is not presented as a page but is a "helper" of sorts to redirect the user after they interact with the buttons.
 @app.route('/learn/new-question')
 def newQuestion():
-    # This block runs the first time the user goes on this route and makes a list of ids
+    # This block runs the first time the user goes on this route and makes a list of ids for the questions.
     if not session.get('question_ids', None):
         session['question_ids'] = []
         grabbed_ids = query_db(f"SELECT id FROM terms WHERE NOT id={1}", one=True)
@@ -153,34 +157,19 @@ def newQuestion():
         id = grabbed_ids[0]
         session['currentQuestion'] = id
         return redirect(f'/learn/quiz-{id}')
-    # This block runs the next time the user is on this route and 
+    # This block runs every time other than the first time. This changes the quiz id number.
     else:
         session.get('currentQuestion', None)
         session['currentQuestion'] = session['currentQuestion']+1
         id = session['currentQuestion']
+        user_id = session['user'][0]
+        insert = query_db("INSERT INTO progress (user_id, term_id, status) VALUES (?,?,?)", [user_id, id, 'learned'])
         return redirect(f'/learn/quiz-{id}')
-    # sql = "SELECT * FROM terms"
-    # quiz = query_db(sql, one=True)
-    # # "SELECT user.id, terms.id FROM users INNER JOIN terms ON progress.user_id"
-    # # term_status = query_db(sql, one=True)
 
-    # question_ids = []
-    # current_question = 1
-    # # This runs the first time that newQuestion is called and makes a list of 10 questions for the user to be redirected to later.
-    # if not session.get(question_ids, None):
-    #     grabbed_id = query_db(f"SELECT id FROM terms WHERE NOT id={1}")
-    #     question_ids.append(grabbed_id)
-    #     print(question_ids)
-    #     id = question_ids[0]
-    #     print(id)
-    #     return redirect(f'/learn/quiz-{id}+1')
-    # else:
-    #     session.get(current_question, None)
-    #     current_question = current_question + 1
-    #     session.get(question_ids, None)
-    #     print(question_ids)
-    #     redirect(f'/learn/quiz-{id}')
-    return render_template("quiz.html", quiz=quiz)
+# This route is a custom 404 page with a link for the user to return to the home page.
+@app.errorhandler(404)
+def pageNotFound(e):
+    return render_template("404.html"), 404
 
 # Livereload to allow automatic website refresh when saving files.
 if __name__ == "__main__":
